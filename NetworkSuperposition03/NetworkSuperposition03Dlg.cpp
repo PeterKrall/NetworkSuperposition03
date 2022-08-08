@@ -115,6 +115,7 @@ void CNetworkSuperposition03Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, ED_RANDOM_TRANSMISSION_PROBABILITY_STRAIN_3, random_transmission_probability_strain1);
 	DDX_Control(pDX, ED_RANDOM_TRANSMISSION_PROBABILITY_STRAIN_4, random_transmission_probability_strain2);
 	DDX_Control(pDX, IDC_CHECK1, base_on_shuffled_population);
+	DDX_Control(pDX, IDC_EDIT1, label);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkSuperposition03Dlg, CDialogEx)
@@ -250,7 +251,7 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 {
 	model::Configuration::configuration = new model::Configuration
 	(
-		to_uint(aggregated_net_with_fluctuation_transmission_probability_strain_1)
+		  to_uint(aggregated_net_with_fluctuation_transmission_probability_strain_1)
 		, to_uint(aggregated_stable_net_transmission_probability_strain_1)
 		, to_uint(basic_net_with_fluctuation_transmission_probability_strain_1)
 		, to_uint(basic_stable_net_transmission_probability_strain_1)
@@ -280,6 +281,7 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 		, to_string(initial_cases_strain_2).c_str()
 		, to_uint(appearance_of_strain_2)
 		, to_string(output_filename_prefix).c_str()
+		, to_string(label).c_str()
 	);
 	try
 	{

@@ -39,6 +39,7 @@ namespace model
         const std::string initial_strain2cases;
         const unsigned int first_strain2_appearance;
         const std::string output_directory;
+        const std::string label;
         Configuration
         (
           unsigned int strain_1_transmission_probability_in_aggregated_net_with_fluctuation
@@ -71,6 +72,7 @@ namespace model
         , const char* initial_strain2cases
         , unsigned int first_strain2_appearance
         , const char* output_directory
+        , const char* label
         );
         //
         static Configuration* configuration;

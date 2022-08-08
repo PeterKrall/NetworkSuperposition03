@@ -11,8 +11,9 @@ namespace persistence
         char buffer[4096];
         sprintf_s   (
                   buffer
-                    , "%s_%s_%s.txt"
+                    , "%s%s_%s_%s.txt"
                     , Configuration::configuration->output_directory.c_str()
+                    , Configuration::configuration->label.c_str()
                     , ((Configuration::configuration->shuffle_stable_nets) ? "Y" : "N")
                     , model_run_key
                     );

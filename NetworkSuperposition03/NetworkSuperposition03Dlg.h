@@ -63,4 +63,5 @@ public:
 	CEdit random_transmission_probability_strain1;
 	CEdit random_transmission_probability_strain2;
 	CButton base_on_shuffled_population;
+	CEdit label;
 };

@@ -32,6 +32,7 @@ namespace model {
     , initial_strain1cases("3,5,7,11,13")
     , initial_strain2cases("71,73,79,83,89")
     , output_directory("c:/temp/")
+    , label("unknown")
     {}
     Configuration::Configuration
     (
@@ -65,6 +66,7 @@ namespace model {
     , const char* initial_strain2cases
     , unsigned int first_strain2_appearance
     , const char* output_directory
+    , const char* label
     )
     : strain_1_transmission_probability_in_aggregated_net_with_fluctuation (strain_1_transmission_probability_in_aggregated_net_with_fluctuation)
     , strain_1_transmission_probability_in_aggregated_stable_net (strain_1_transmission_probability_in_aggregated_stable_net)
@@ -95,6 +97,7 @@ namespace model {
     , initial_strain1cases(initial_strain1cases)
     , initial_strain2cases(initial_strain2cases)
     , output_directory(output_directory)
+    , label(label)
     {}
 
 

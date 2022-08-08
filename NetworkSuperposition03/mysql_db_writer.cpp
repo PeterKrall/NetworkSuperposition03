@@ -25,7 +25,7 @@ namespace persistence
                                 || mysql_autocommit(connection, true)
             )
         {
-            throw mysql_error(connection);
+            throw mysql_error(connection); 
         }
         char query[4096];
         sprintf_s   (
@@ -33,6 +33,7 @@ namespace persistence
                     , "insert into header "
                     "( "
                     "  model_run_key "
+                    " ,label "
                     " ,strain_1_transmission_probability_aggregated_net_fluctuation "
                     " ,strain_1_transmission_probability_aggregated_stable_net "
                     " ,strain_1_transmission_probability_basic_net_luctuation "
@@ -52,10 +53,20 @@ namespace persistence
                     " ,strain1_random_transmission_probability "
                     " ,strain2_random_transmission_probability "
                     " ,shuffle_stable_nets "
+                    " ,strain_1_contagiousness_begin "
+                    " ,strain_1_contagiousness_end "
+                    " ,strain_2_contagiousness_begin "
+                    " ,strain_2_contagiousness_end "
+                    " ,immunity_reduction_time " 
+                    " ,immunity_reduction_weight "
+                    " ,initial_strain1cases "
+                    " ,initial_strain2cases "
+                    " ,first_strain2_appearance "
                     ") values ( "
-                    " '%s' ,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d "
+                    " '%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d "
                     ") "
                     , model_run_key
+                    , model::Configuration::configuration->label.c_str()
                     , model::Configuration::configuration->strain_1_transmission_probability_in_aggregated_net_with_fluctuation
                     , model::Configuration::configuration->strain_1_transmission_probability_in_aggregated_stable_net
                     , model::Configuration::configuration->strain_1_transmission_probability_in_basic_net_with_fluctuation
@@ -75,7 +86,16 @@ namespace persistence
                     , model::Configuration::configuration->strain1_random_transmission_probability
                     , model::Configuration::configuration->strain2_random_transmission_probability
                     , (model::Configuration::configuration->shuffle_stable_nets?1:0)
-                    );
+                    , model::Configuration::configuration->strain_1_contagiousness_begin
+                    , model::Configuration::configuration->strain_1_contagiousness_end
+                    , model::Configuration::configuration->strain_2_contagiousness_begin
+                    , model::Configuration::configuration->strain_2_contagiousness_end
+                    , model::Configuration::configuration->immunity_reduction_time_of_strain1_for_strain_2_exposition
+                    , model::Configuration::configuration->immunity_reduction_weight_of_strain1_for_strain_2_exposition
+                    , model::Configuration::configuration->initial_strain1cases.c_str()
+                    , model::Configuration::configuration->initial_strain2cases.c_str()
+                    , model::Configuration::configuration->first_strain2_appearance
+        );
         if (mysql_query(connection, query))
         {
             throw mysql_error(connection);
