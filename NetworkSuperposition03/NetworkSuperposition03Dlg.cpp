@@ -7,6 +7,7 @@
 #include "NetworkSuperposition03Dlg.h"
 #include "afxdialogex.h"
 #include "model.h"
+#include <stdexcept>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -290,9 +291,9 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 			model::Model::run_model();
 		}
 	}
-	catch (...)
+	catch (std::exception& ex)
 	{
-		AfxMessageBox(L"Oops! Some unexpected exception occured");
+		AfxMessageBox(L"Oops! Some unexpected exception occured\n");
 	}
 	CDialogEx::OnOK();
 }
