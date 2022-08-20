@@ -33,6 +33,15 @@
     <ClInclude Include="analysis_engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\NetworkSuperposition03\population_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NetworkSuperposition03\configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="plotter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="persistence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +54,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="analysis_engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetworkSuperposition03\configuration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plotter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mysql_persistence_provider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="persistence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mysql_persistence_provider.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NetworkSuperposition03\population_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

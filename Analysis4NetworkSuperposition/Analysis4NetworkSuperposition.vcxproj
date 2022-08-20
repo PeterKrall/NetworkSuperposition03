@@ -76,7 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\MariaDB 10.8\include\mysql;C:\Program Files\MATLAB\R2022a\extern\include;$(IncludePath)</IncludePath>
+    <IncludePath>../NetworkSuperposition03;C:\Program Files\MariaDB 10.8\include\mysql;C:\Program Files\MATLAB\R2022a\extern\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\MATLAB\R2022a\lib;C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib;C:\Program Files\MariaDB 10.8\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -87,7 +87,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files\MariaDB 10.8\include\mysql;C:\Program Files\MATLAB\R2022a\extern\include;$(IncludePath)</IncludePath>
+    <IncludePath>../NetworkSuperposition03;C:\Program Files\MariaDB 10.8\include\mysql;C:\Program Files\MATLAB\R2022a\extern\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\MATLAB\R2022a\lib;C:\Program Files\MariaDB\MariaDB Connector C 64-bit\lib;C:\Program Files\MariaDB 10.8\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -95,7 +95,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;USE_MYSQL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -169,7 +169,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;USE_MYSQL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -191,18 +191,27 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\NetworkSuperposition03\configuration.h" />
+    <ClInclude Include="..\NetworkSuperposition03\population_state.h" />
     <ClInclude Include="Analysis4NetworkSuperposition.h" />
     <ClInclude Include="Analysis4NetworkSuperpositionDlg.h" />
     <ClInclude Include="analysis_engine.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="persistence.h" />
+    <ClInclude Include="plotter.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\NetworkSuperposition03\configuration.cpp" />
+    <ClCompile Include="..\NetworkSuperposition03\population_state.cpp" />
     <ClCompile Include="Analysis4NetworkSuperposition.cpp" />
     <ClCompile Include="Analysis4NetworkSuperpositionDlg.cpp" />
     <ClCompile Include="analysis_engine.cpp" />
+    <ClCompile Include="mysql_persistence_provider.cpp" />
+    <ClCompile Include="mysql_persistence_provider.h" />
+    <ClCompile Include="persistence.cpp" />
+    <ClCompile Include="plotter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Analysis4NetworkSuperposition.rc" />

@@ -20,7 +20,7 @@ namespace model
         }
         // build a shuffled copy of the population
 #define POPULATION_SEGMENT_SIZE 2000
-#define NUMBER_OF_SWAPS 1000000
+#define NUMBER_OF_SWAPS (Configuration::configuration->population_size / 100) * Configuration::configuration->aggregated_stable_net_shuffle
         unsigned int segment_count = Configuration::configuration->population_size / POPULATION_SEGMENT_SIZE;
         for (unsigned int i = 0; i < NUMBER_OF_SWAPS; ++i)
         {

@@ -1,5 +1,6 @@
 #include "plotter.h"
-#include "analysis_engine"
+#include "analysis_engine.h"
+#include "configuration.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -19,7 +20,7 @@ namespace analysis
         sprintf_s(
             buffer
             , "%smodel_run__%d_%d_%d_%d_%d_%d.png"
-            , Configuration::configuration->output_directory.c_str()
+            , model::Configuration::configuration->output_directory.c_str()
             , now->tm_year + 1900, now->tm_mon + 1, now->tm_mday, now->tm_hour, now->tm_min, now->tm_sec
         );
         // out.open(buffer);
@@ -86,8 +87,8 @@ namespace analysis
     void Plotter::test()
     {
         // first test - is matlab here at all?
-        std::vector<matlab::data::Array> args({ Model::get_matlab_data_factory()->createScalar<int16_t>(30), Model::get_matlab_data_factory()->createScalar<int16_t>(25) });
-        matlab::data::TypedArray<int16_t> result = (*Model::get_matlab_engine())->feval(u"gcd", args);
+        std::vector<matlab::data::Array> args({ AnalysisEngine::get_matlab_data_factory()->createScalar<int16_t>(30), AnalysisEngine::get_matlab_data_factory()->createScalar<int16_t>(25) });
+        matlab::data::TypedArray<int16_t> result = (*AnalysisEngine::get_matlab_engine())->feval(u"gcd", args);
         int16_t v = result[0];
         assert(v == (int16_t)5);
         // second test - plot a wave

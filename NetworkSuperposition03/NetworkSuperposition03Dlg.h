@@ -64,4 +64,5 @@ public:
 	CEdit random_transmission_probability_strain2;
 	CButton base_on_shuffled_population;
 	CEdit label;
+	CEdit aggregated_stable_net_shuffle;
 };

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "strain1state.h"
 #include "strain2state.h"
+#include <string>
 namespace model
 {
 
@@ -51,35 +52,11 @@ namespace model
         }
         if (Configuration::configuration->generation==10)
         {
-            std::vector<std::string> initial_cases;
-            std::string initial_cases_string(Configuration::configuration->initial_strain1cases);
-            size_t pos;
-            while ((pos = initial_cases_string.find(",")) != std::string::npos)
-            {
-                initial_cases.push_back(initial_cases_string.substr(0, pos));
-                initial_cases_string.erase(0, pos + 1);
-            }
-            initial_cases.push_back(initial_cases_string);
-            for (std::vector<std::string>::iterator it = initial_cases.begin(); it != initial_cases.end(); ++it)
-            {                
-                (*(members+atoi((*it).c_str())))->activate(Strain1State::get_state_builder(),true);
-            }
+            initialize_activity(std::string(Configuration::configuration->initial_strain1cases), Strain1State::get_state_builder());
         }
         if (Configuration::configuration->generation == Configuration::configuration->first_strain2_appearance)
-        {
-            std::vector<std::string> initial_cases;
-            std::string initial_cases_string(Configuration::configuration->initial_strain2cases);
-            size_t pos;
-            while ((pos = initial_cases_string.find(",")) != std::string::npos)
-            {
-                initial_cases.push_back(initial_cases_string.substr(0, pos));
-                initial_cases_string.erase(0, pos + 1);
-            }
-            initial_cases.push_back(initial_cases_string);
-            for (std::vector<std::string>::iterator it = initial_cases.begin(); it != initial_cases.end(); ++it)
-            {
-                (*(members+atoi((*it).c_str())))->activate(Strain2State::get_state_builder(),true);
-            }
+        {            
+            initialize_activity(std::string(Configuration::configuration->initial_strain2cases), Strain2State::get_state_builder());
         }
     }
 } // namespace model

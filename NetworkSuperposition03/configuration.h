@@ -1,5 +1,5 @@
-#ifndef MODELL_CONFIGURATION_H
-#define MODELL_CONFIGURATION_H
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 #include <vector>
 #include <string>
 
@@ -28,7 +28,7 @@ namespace model
         const unsigned int strain1_random_transmission_probability;
         const unsigned int strain2_random_transmission_probability;
         //
-        const bool shuffle_stable_nets;
+        const unsigned int aggregated_stable_net_shuffle;
         const unsigned int strain_1_contagiousness_begin;
         const unsigned int strain_1_contagiousness_end;
         const unsigned int strain_2_contagiousness_begin;
@@ -60,17 +60,17 @@ namespace model
         , unsigned int population_size
         , unsigned int strain1_random_transmission_probability
         , unsigned int strain2_random_transmission_probability
-        , bool shuffle_stable_nets
+        , unsigned int aggregated_stable_net_shuffle
         //
         , unsigned int strain_1_contagiousness_begin
         , unsigned int strain_1_contagiousness_end
         , unsigned int strain_2_contagiousness_begin
         , unsigned int strain_2_contagiousness_end
+        , unsigned int first_strain2_appearance
         , unsigned int immunity_reduction_time_of_strain1_for_strain_2_exposition
         , unsigned int immunity_reduction_weight_of_strain1_for_strain_2_exposition
         , const char* initial_strain1cases
         , const char* initial_strain2cases
-        , unsigned int first_strain2_appearance
         , const char* output_directory
         , const char* label
         );

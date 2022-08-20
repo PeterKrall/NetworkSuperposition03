@@ -10,11 +10,7 @@ namespace model
         for (unsigned int i = 0; i < Configuration::configuration->aggregated_stable_net_size; ++i)
         {
             
-            Individual* member 
-                = (Configuration::configuration->shuffle_stable_nets)
-                ? *(Population::instance->get_shuffled_members() + offset + i)
-                : *(Population::instance->get_members()+offset+i)
-                ;
+            Individual* member = *(Population::instance->get_shuffled_members() + offset + i);
             *(members+i) = member;
             member->register_net(this);
         }

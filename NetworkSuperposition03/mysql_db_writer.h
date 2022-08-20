@@ -2,6 +2,7 @@
 #ifndef MYSQL_DB_WRITER
 #define MYSQL_DB_WRITER
 #include "writer.h"
+#include "configuration.h"
 #include <mysql.h>
 namespace persistence
 {

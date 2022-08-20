@@ -11,10 +11,9 @@ namespace persistence
         char buffer[4096];
         sprintf_s   (
                   buffer
-                    , "%s%s_%s_%s.txt"
+                    , "%s%s_%s.txt"
                     , Configuration::configuration->output_directory.c_str()
                     , Configuration::configuration->label.c_str()
-                    , ((Configuration::configuration->shuffle_stable_nets) ? "Y" : "N")
                     , model_run_key
                     );
         out.open(buffer);
@@ -39,7 +38,7 @@ namespace persistence
             ", population_size = %d\n"
             ", strain1_random_transmission_probability = %d\n"
             ", strain2_random_transmission_probability = %d\n"
-            ", aggregated stable nets based on shuffled population ? %s\n"
+            ", aggregated stable nets shuffle = %d\n"
             ", strain_1_contagiousness_begin = %d\n"
             ", strain_1_contagiousness_end = %d\n"
             ", strain_2_contagiousness_begin = %d\n"
@@ -68,7 +67,7 @@ namespace persistence
             , Configuration::configuration->population_size
             , Configuration::configuration->strain1_random_transmission_probability
             , Configuration::configuration->strain2_random_transmission_probability
-            , ((Configuration::configuration->shuffle_stable_nets) ? "Y" : "N")
+            , Configuration::configuration->aggregated_stable_net_shuffle
             , Configuration::configuration->strain_1_contagiousness_begin
             , Configuration::configuration->strain_1_contagiousness_end
             , Configuration::configuration->strain_2_contagiousness_begin

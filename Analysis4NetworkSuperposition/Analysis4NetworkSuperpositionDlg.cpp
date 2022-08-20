@@ -6,7 +6,8 @@
 #include "Analysis4NetworkSuperposition.h"
 #include "Analysis4NetworkSuperpositionDlg.h"
 #include "afxdialogex.h"
-
+#include "analysis_engine.h"
+#include <stdexcept>
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -64,6 +65,7 @@ BEGIN_MESSAGE_MAP(CAnalysis4NetworkSuperpositionDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDOK, &CAnalysis4NetworkSuperpositionDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -152,3 +154,17 @@ HCURSOR CAnalysis4NetworkSuperpositionDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CAnalysis4NetworkSuperpositionDlg::OnBnClickedOk()
+{
+	try
+	{
+		analysis::AnalysisEngine::start_analysis();
+	}
+	catch (std::exception& e)
+	{
+		AfxMessageBox(L"Oops! This never happened\n");
+	}
+	CDialogEx::OnOK();
+}

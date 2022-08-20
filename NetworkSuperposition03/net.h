@@ -22,6 +22,7 @@ namespace model
     protected:        
         Individual** members;
         unsigned int size = 0;
+        unsigned int initialize_activity(std::string& initial_cases_string, _state_builder state_builder);
     private:
         double strain1_transmission_probability_complement = 1.0;
         double strain2_transmission_probability_complement = 1.0;

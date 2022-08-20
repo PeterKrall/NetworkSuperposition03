@@ -1,4 +1,6 @@
 #include "analysis_engine.h"
+#include "persistence.h"
+
 namespace analysis
 {
     static bool matlab_initialized = false;
@@ -34,17 +36,53 @@ namespace analysis
     }
     AnalysisEngine::AnalysisEngine()
     {
-
+        configurations = nullptr;
     }
     AnalysisEngine::~AnalysisEngine()
     {
-
+        /*
+        for (auto it = std::begin(v); it != std::end(v); ++it) 
+        {
+            std::cout << *it << "\n";
+        }
+        */
     }
     analysis AnalysisEngine::start_analysis = &analyse;
     matlab::data::ArrayFactory* AnalysisEngine::get_matlab_data_factory() { return matlab_data_factory; };
     std::unique_ptr<MATLABEngine>* AnalysisEngine::get_matlab_engine() { return &matlab_engine; }
     unsigned int AnalysisEngine::run_analysis()
     {
+       std::vector<model::Configuration*>* configurations = (persistence::PersistenceProvider::get_persistence_provider_instance())()->read_configurations();
+        for (std::vector<model::Configuration*>::iterator it = configurations->begin(); it != configurations->end(); ++it) 
+        {
+            analyse_model_runs(*it);
+            delete* it;
+        }
+        delete configurations;
         return 0;
     }
+    unsigned int AnalysisEngine::analyse_model_runs(model::Configuration* configuration)
+    {
+        std::vector<std::string*>* model_runs = (persistence::PersistenceProvider::get_persistence_provider_instance())()->read_model_runs(configuration);
+        for (std::vector<std::string*>::iterator it = model_runs->begin(); it != model_runs->end(); ++it)
+        {
+            analyse_model_run(*it);
+            delete* it;
+        }
+        delete model_runs;
+
+        return 0;
+    }
+    unsigned int AnalysisEngine::analyse_model_run(std::string* model_run_key)
+    {
+        std::vector<model::PopulationState*>* population_states = (persistence::PersistenceProvider::get_persistence_provider_instance())()->read_population_states(model_run_key);
+        for (std::vector<model::PopulationState*>::iterator it = population_states->begin(); it != population_states->end(); ++it)
+        {            
+            delete* it;
+        }
+        delete population_states;
+
+        return 0;
+    }
+
 }

@@ -115,8 +115,8 @@ void CNetworkSuperposition03Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, ED_BASIC_NET_WITH_FLUCTUATION_FLUCTUATION, basic_net_with_fluctuation_fluctuation);
 	DDX_Control(pDX, ED_RANDOM_TRANSMISSION_PROBABILITY_STRAIN_3, random_transmission_probability_strain1);
 	DDX_Control(pDX, ED_RANDOM_TRANSMISSION_PROBABILITY_STRAIN_4, random_transmission_probability_strain2);
-	DDX_Control(pDX, IDC_CHECK1, base_on_shuffled_population);
 	DDX_Control(pDX, IDC_EDIT1, label);
+	DDX_Control(pDX, ED_AGGREGATED_STABLE_NET_SHUFFLE, aggregated_stable_net_shuffle);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkSuperposition03Dlg, CDialogEx)
@@ -176,7 +176,7 @@ BOOL CNetworkSuperposition03Dlg::OnInitDialog()
 	population_size.SetWindowTextW(to_wstring(model::Configuration::configuration-> population_size));
 	random_transmission_probability_strain1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain1_random_transmission_probability));
 	random_transmission_probability_strain2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain2_random_transmission_probability));
-	base_on_shuffled_population.SetCheck(model::Configuration::configuration->shuffle_stable_nets);
+	aggregated_stable_net_shuffle.SetWindowTextW(to_wstring(model::Configuration::configuration->aggregated_stable_net_shuffle));
 	//
 	contagiosuness_begin_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration-> strain_1_contagiousness_begin));
 	contagiosuness_end_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration-> strain_1_contagiousness_end));
@@ -250,9 +250,11 @@ HCURSOR CNetworkSuperposition03Dlg::OnQueryDragIcon()
 
 void CNetworkSuperposition03Dlg::OnBnClickedOk()
 {
-	model::Configuration::configuration = new model::Configuration
-	(
-		  to_uint(aggregated_net_with_fluctuation_transmission_probability_strain_1)
+	try 
+	{
+		model::Configuration::configuration = new model::Configuration
+		(
+ 	      to_uint(aggregated_net_with_fluctuation_transmission_probability_strain_1)
 		, to_uint(aggregated_stable_net_transmission_probability_strain_1)
 		, to_uint(basic_net_with_fluctuation_transmission_probability_strain_1)
 		, to_uint(basic_stable_net_transmission_probability_strain_1)
@@ -270,7 +272,7 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 		, to_uint(population_size)
 		, to_uint(random_transmission_probability_strain1)
 		, to_uint(random_transmission_probability_strain2)
-		, base_on_shuffled_population.GetCheck()
+		, to_uint(aggregated_stable_net_shuffle)
 		//
 		, to_uint(contagiosuness_begin_strain_1)
 		, to_uint(contagiosuness_end_strain_1)
@@ -278,12 +280,17 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 		, to_uint(contagiosuness_end_strain_2)
 		, to_uint(reduction_of_immunity_time)
 		, to_uint(reduction_of_immunity_degree)
+		, to_uint(appearance_of_strain_2)
 		, to_string(initial_cases_strain_1).c_str()
 		, to_string(initial_cases_strain_2).c_str()
-		, to_uint(appearance_of_strain_2)
 		, to_string(output_filename_prefix).c_str()
 		, to_string(label).c_str()
-	);
+		);
+	}
+	catch (...)
+	{
+		AfxMessageBox(L"oops - what is going on here?");
+	}
 	try
 	{
 		for (unsigned int run = 0; run < to_uint(number_of_runs); ++run)
@@ -293,7 +300,7 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 	}
 	catch (std::exception& ex)
 	{
-		AfxMessageBox(L"Oops! Some unexpected exception occured\n");
+		AfxMessageBox(L"Oops! This never happened\n");
 	}
 	CDialogEx::OnOK();
 }

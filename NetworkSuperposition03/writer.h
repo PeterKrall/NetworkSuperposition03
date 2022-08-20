@@ -1,8 +1,7 @@
 #ifndef WRITER_H
 #define WRITER_H
-
+#include "configuration.h"
 #include "population_state.h"
-
 namespace model
 {
 	typedef class Writer* (open_writer_function(char* model_run_key));

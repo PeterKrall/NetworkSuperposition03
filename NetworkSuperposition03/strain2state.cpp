@@ -15,7 +15,10 @@ namespace model
             return get_state_builder();
         }
     }
-    _state_builder Strain2State::get_state_builder() { return class_specific_state_builder; }
+    _state_builder Strain2State::get_state_builder() 
+    { 
+        return class_specific_state_builder; 
+    }
     _state_builder Strain2State::class_specific_state_builder = &Strain2State::state_builder;
     State* Strain2State::state_builder(bool skip_non_contagious_period)
     {

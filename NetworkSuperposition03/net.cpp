@@ -64,5 +64,32 @@ namespace model
         }
         return found_activity;
     }
-
+    unsigned int Net::initialize_activity(std::string& initial_cases_string, _state_builder state_builder)
+    {
+        unsigned int cnt = 0;
+        std::vector<std::string> initial_cases;
+        (Configuration::configuration->initial_strain2cases);
+        size_t pos;
+        while ((pos = initial_cases_string.find(",")) != std::string::npos)
+        {
+            initial_cases.push_back(initial_cases_string.substr(0, pos));
+            initial_cases_string.erase(0, pos + 1);
+        }
+        initial_cases.push_back(initial_cases_string);
+        for (std::vector<std::string>::iterator it = initial_cases.begin(); it != initial_cases.end(); ++it)
+        {
+            try
+            {
+                unsigned int idx = std::stol((*it));
+                Individual* member = *(members + atoi((*it).c_str()));
+                member->activate(state_builder, true);
+                cnt++;
+            }
+            catch (...)
+            {
+                // do nothing - the particle does not define a valid element
+            }
+        }
+        return cnt;
+    }
 } // namespace model

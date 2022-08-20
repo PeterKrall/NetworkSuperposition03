@@ -36,7 +36,7 @@ namespace persistence
                     " ,label "
                     " ,strain_1_transmission_probability_aggregated_net_fluctuation "
                     " ,strain_1_transmission_probability_aggregated_stable_net "
-                    " ,strain_1_transmission_probability_basic_net_luctuation "
+                    " ,strain_1_transmission_probability_basic_net_fluctuation "
                     " ,strain_1_transmission_probability_basic_stable_net "
                     " ,strain_2_transmission_probability_aggregated_net_fluctuation "
                     " ,strain_2_transmission_probability_aggregated_stable_net "
@@ -85,7 +85,7 @@ namespace persistence
                     , model::Configuration::configuration->population_size
                     , model::Configuration::configuration->strain1_random_transmission_probability
                     , model::Configuration::configuration->strain2_random_transmission_probability
-                    , (model::Configuration::configuration->shuffle_stable_nets?1:0)
+                    , model::Configuration::configuration->aggregated_stable_net_shuffle
                     , model::Configuration::configuration->strain_1_contagiousness_begin
                     , model::Configuration::configuration->strain_1_contagiousness_end
                     , model::Configuration::configuration->strain_2_contagiousness_begin
@@ -168,7 +168,8 @@ namespace persistence
         return true;
 #else
         return false;
-#endif // NOT use file
+#endif // NOT use combined db|file-writer
     }
+    
 }
 #endif // USE mysql
