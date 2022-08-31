@@ -15,11 +15,10 @@ namespace persistence
 		~MySQLdbWriter();
 	public:
 		virtual void persist_population_state(model::PopulationState* population_state);
+		static bool activate_conditionally();
 	private:
 		static model::Writer* create(char* model_run_key);
 		static void destroy(model::Writer*);
-		static bool is_activated;
-		static bool activate_conditionally();
 	private:
 		static MySQLdbWriter* instance;
 		MYSQL* connection = nullptr;

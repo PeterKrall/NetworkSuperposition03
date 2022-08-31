@@ -196,6 +196,8 @@
     <ClInclude Include="Analysis4NetworkSuperposition.h" />
     <ClInclude Include="Analysis4NetworkSuperpositionDlg.h" />
     <ClInclude Include="analysis_engine.h" />
+    <ClInclude Include="configuration_statistics.h" />
+    <ClInclude Include="run_statistics.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="persistence.h" />
     <ClInclude Include="plotter.h" />
@@ -208,10 +210,12 @@
     <ClCompile Include="Analysis4NetworkSuperposition.cpp" />
     <ClCompile Include="Analysis4NetworkSuperpositionDlg.cpp" />
     <ClCompile Include="analysis_engine.cpp" />
+    <ClCompile Include="configuration_statistics.cpp" />
     <ClCompile Include="mysql_persistence_provider.cpp" />
     <ClCompile Include="mysql_persistence_provider.h" />
     <ClCompile Include="persistence.cpp" />
     <ClCompile Include="plotter.cpp" />
+    <ClCompile Include="run_statistics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Analysis4NetworkSuperposition.rc" />

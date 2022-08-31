@@ -43,14 +43,17 @@ namespace persistence
         instance = nullptr;
     }
 
-    bool MySQLPersistenceProvider::is_activated = activate();
+    static bool is_activated = MySQLPersistenceProvider::activate();
 
     bool MySQLPersistenceProvider::activate()
     {
-        PersistenceProvider::get_persistence_provider_instance_implementation
-            = &MySQLPersistenceProvider::get_instance;
-        PersistenceProvider::close_persistence_provider_instance_implementation
-            = &MySQLPersistenceProvider::close_instance;
+        if (PersistenceProvider::get_persistence_provider_instance_implementation == nullptr)
+        {
+            PersistenceProvider::get_persistence_provider_instance_implementation
+                = &MySQLPersistenceProvider::get_instance;
+            PersistenceProvider::close_persistence_provider_instance_implementation
+                = &MySQLPersistenceProvider::close_instance;
+        }
         return true;
     }
     std::vector<model::Configuration*>* MySQLPersistenceProvider::read_configurations()
@@ -285,7 +288,285 @@ namespace persistence
             return nullptr;
         }
     }
-    
+    void MySQLPersistenceProvider::persist(analysis::ModelRunStatistics* model_run_statistics, const char* model_run_key)
+    {
+        char query[4096];
+        try
+        {
+            sprintf_s
+            (
+                  query
+                , "update header set "
+                "  max = %d "
+                ", max_1 = %d "
+                ", max_2= %d "
+                ", max_post_1= %d "
+                ", post_1= %d "
+                ", post_2= %d "
+                ", initial= %d "
+                ", length= %d "
+                ", time_to_dominance= %d "
+                ", first_close_max= %d "
+                ", last_close_max= %d "
+                ", time_to_complete_replacement= %d "
+                ", immunity_at_peak = %f "
+                ", immunity_at_end = %f "
+                ", immunity_at_last_90pcnt_max = %f "
+                ", immunity_at_last_75pcnt_max = %f "
+                ", immunity_at_complete_replacement = %f "
+                " where model_run_key = '%s' "
+                , model_run_statistics->max
+                , model_run_statistics->max_1
+                , model_run_statistics->max_2
+                , model_run_statistics->max_post_1
+                , model_run_statistics->post_1
+                , model_run_statistics->post_2
+                , model_run_statistics->initial
+                , model_run_statistics->length
+                , model_run_statistics->time_to_dominance
+                , model_run_statistics->first_close_max
+                , model_run_statistics->last_close_max
+                , model_run_statistics->time_to_complete_replacement
+                , model_run_statistics->immunity_at_peak
+                , model_run_statistics->immunity_at_end
+                , model_run_statistics->immunity_at_last_90pcnt_max
+                , model_run_statistics->immunity_at_last_75pcnt_max
+                , model_run_statistics->immunity_at_complete_replacement
+                , model_run_key
+            );
+            
+            MYSQL_STMT* stmt = mysql_stmt_init(connection);
+            mysql_stmt_prepare(stmt, query, -1);
+            if (mysql_stmt_execute(stmt)) { throw mysql_error(connection); }
+            mysql_stmt_close(stmt);
+        }
+        catch (...)
+        {
+            printf("oops - that's an error in the program");
+        }
+    }
+    void MySQLPersistenceProvider::erase_configuration_statistics()
+    {
+        char query[4096];
+        try
+        {
+            sprintf_s
+            (
+                query
+                , "delete from configuration_statistics"
+            );
+            MYSQL_STMT* stmt = mysql_stmt_init(connection);
+            mysql_stmt_prepare(stmt, query, -1);
+            if (mysql_stmt_execute(stmt)) { throw mysql_error(connection); }
+            mysql_stmt_close(stmt);
+        }
+        catch (...)
+        {
+            printf("oops - that's an error in the program");
+        }
+    }
+    void MySQLPersistenceProvider::insert_configuration_statistics(analysis::ConfigurationStatistics& configuration_statistics)
+    {
+        char query[8192];
+        sprintf_s(
+            query
+            , "insert into configuration_statistics "
+            "( "
+            "  label "
+            " ,strain_1_transmission_probability_aggregated_net_fluctuation "
+            " ,strain_1_transmission_probability_aggregated_stable_net "
+            " ,strain_1_transmission_probability_basic_net_fluctuation "
+            " ,strain_1_transmission_probability_basic_stable_net "
+            " ,strain_2_transmission_probability_aggregated_net_fluctuation "
+            " ,strain_2_transmission_probability_aggregated_stable_net "
+            " ,strain_2_transmission_probability_basic_net_fluctuation "
+            " ,strain_2_transmission_probability_basic_stable_net "
+            " ,aggregated_net_with_fluctuation_number "
+            " ,aggregated_net_with_fluctuation_size "
+            " ,aggregated_stable_net_size "
+            " ,basic_net_with_fluctuation_fluctuation "
+            " ,basic_net_with_fluctuation_number "
+            " ,basic_net_with_fluctuation_size "
+            " ,basic_stable_net_size "
+            " ,population_size "
+            " ,strain1_random_transmission_probability "
+            " ,strain2_random_transmission_probability "
+            " ,shuffle_stable_nets "
+            " ,strain_1_contagiousness_begin "
+            " ,strain_1_contagiousness_end "
+            " ,strain_2_contagiousness_begin "
+            " ,strain_2_contagiousness_end "
+            " ,immunity_reduction_time "
+            " ,immunity_reduction_weight "
+            " ,initial_strain1cases "
+            " ,initial_strain2cases "
+            " ,first_strain2_appearance "
+            " ,number_of_runs "
+            " ,max_max_new "
+            " ,min_max_new "
+            " ,mean_max_new "
+            " ,standard_deviation_max_new "
+            " ,max_max1_new "
+            " ,min_max1_new "
+            " ,mean_max1_new "
+            " ,standard_deviation_max1_new "
+            " ,max_max2_new "
+            " ,min_max2_new "
+            " ,mean_max2_new "
+            " ,standard_deviation_max2_new "
+            " ,max_max_post1 "
+            " ,min_max_post1 "
+            " ,mean_max_post1 "
+            " ,standard_deviation_max_post1 "
+            " ,max_post1_at_end "
+            " ,min_post1_at_end "
+            " ,mean_post1_at_end "
+            " ,standard_deviation_post1_at_end "
+            " ,max_post2_at_end "
+            " ,min_post2_at_end "
+            " ,mean_post2_at_end "
+            " ,standard_deviation_post2_at_end "
+            " ,max_length "
+            " ,min_length "
+            " ,mean_length "
+            " ,standard_deviation_length "
+            " ,max_time_to_complete_replacement "
+            " ,min_time_to_complete_replacement "
+            " ,mean_time_to_complete_replacement "
+            " ,standard_deviation_time_to_complete_replacement "
+            " ,max_time_to_dominance "
+            " ,min_time_to_dominance "
+            " ,mean_time_to_dominance "
+            " ,standard_deviation_time_to_dominance "
+            " ,max_immunity_at_peak "
+            " ,min_immunity_at_peak "
+            " ,mean_immunity_at_peak "
+            " ,standard_deviation_immunity_at_peak "
+            " ,max_immunity_at_end "
+            " ,min_immunity_at_end "
+            " ,mean_immunity_at_end "
+            " ,standard_deviation_immunity_at_end "
+            " ,max_immunity_at_complete_replacement "
+            " ,min_immunity_at_complete_replacement "
+            " ,mean_immunity_at_complete_replacement "
+            " ,standard_deviation_immunity_at_complete_replacement "
+            " ,max_immunity_at_last_90pcnt_max "
+            " ,min_immunity_at_last_90pcnt_max "
+            " ,mean_immunity_at_last_90pcnt_max "
+            " ,standard_deviation_immunity_at_last_90pcnt_max "
+            " ,max_immunity_at_last_75pcnt_max "
+            " ,min_immunity_at_last_75pcnt_max "
+            " ,mean_immunity_at_last_75pcnt_max "
+            " ,standard_deviation_immunity_at_last_75pcnt_max "
+            ") values ( "
+            " '%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d, %d "
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%d, %d, %f, %f"
+            " ,%f, %f, %f, %f"
+            " ,%f, %f, %f, %f"
+            " ,%f, %f, %f, %f"
+            " ,%f, %f, %f, %f"
+            " ,%f, %f, %f, %f"
+            ") "
+            , configuration_statistics.label.c_str()
+            , configuration_statistics.strain_1_transmission_probability_in_aggregated_net_with_fluctuation
+            , configuration_statistics.strain_1_transmission_probability_in_aggregated_stable_net
+            , configuration_statistics.strain_1_transmission_probability_in_basic_net_with_fluctuation
+            , configuration_statistics.strain_1_transmission_probability_in_basic_stable_net
+            , configuration_statistics.strain_2_transmission_probability_in_aggregated_net_with_fluctuation
+            , configuration_statistics.strain_2_transmission_probability_in_aggregated_stable_net
+            , configuration_statistics.strain_2_transmission_probability_in_basic_net_with_fluctuation
+            , configuration_statistics.strain_2_transmission_probability_in_basic_stable_net
+            , configuration_statistics.aggregated_net_with_fluctuation_number
+            , configuration_statistics.aggregated_net_with_fluctuation_size
+            , configuration_statistics.aggregated_stable_net_size
+            , configuration_statistics.basic_net_with_fluctuation_fluctuation
+            , configuration_statistics.basic_net_with_fluctuation_number
+            , configuration_statistics.basic_net_with_fluctuation_size
+            , configuration_statistics.basic_stable_net_size
+            , configuration_statistics.population_size
+            , configuration_statistics.strain1_random_transmission_probability
+            , configuration_statistics.strain2_random_transmission_probability
+            , configuration_statistics.aggregated_stable_net_shuffle
+            , configuration_statistics.strain_1_contagiousness_begin
+            , configuration_statistics.strain_1_contagiousness_end
+            , configuration_statistics.strain_2_contagiousness_begin
+            , configuration_statistics.strain_2_contagiousness_end
+            , configuration_statistics.immunity_reduction_time_of_strain1_for_strain_2_exposition
+            , configuration_statistics.immunity_reduction_weight_of_strain1_for_strain_2_exposition
+            , configuration_statistics.initial_strain1cases.c_str()
+            , configuration_statistics.initial_strain2cases.c_str()
+            , configuration_statistics.first_strain2_appearance
+            , configuration_statistics.number_of_runs
+            , configuration_statistics.max_max_new
+            , configuration_statistics.min_max_new
+            , configuration_statistics.mean_max_new
+            , configuration_statistics.standard_deviation_max_new
+            , configuration_statistics.max_max1_new
+            , configuration_statistics.min_max1_new
+            , configuration_statistics.mean_max1_new
+            , configuration_statistics.standard_deviation_max1_new
+            , configuration_statistics.max_max2_new
+            , configuration_statistics.min_max2_new
+            , configuration_statistics.mean_max2_new
+            , configuration_statistics.standard_deviation_max2_new
+            , configuration_statistics.max_max_post1
+            , configuration_statistics.min_max_post1
+            , configuration_statistics.mean_max_post1
+            , configuration_statistics.standard_deviation_max_post1
+            , configuration_statistics.max_post1_at_end
+            , configuration_statistics.min_post1_at_end
+            , configuration_statistics.mean_post1_at_end
+            , configuration_statistics.standard_deviation_post1_at_end
+            , configuration_statistics.max_post2_at_end
+            , configuration_statistics.min_post2_at_end
+            , configuration_statistics.mean_post2_at_end
+            , configuration_statistics.standard_deviation_post2_at_end
+            , configuration_statistics.max_length
+            , configuration_statistics.min_length
+            , configuration_statistics.mean_length
+            , configuration_statistics.standard_deviation_length
+            , configuration_statistics.max_time_to_complete_replacement
+            , configuration_statistics.min_time_to_complete_replacement
+            , configuration_statistics.mean_time_to_complete_replacement
+            , configuration_statistics.standard_deviation_time_to_complete_replacement
+            , configuration_statistics.max_time_to_dominance
+            , configuration_statistics.min_time_to_dominance
+            , configuration_statistics.mean_time_to_dominance
+            , configuration_statistics.standard_deviation_time_to_dominance
+            , configuration_statistics.max_immunity_at_peak
+            , configuration_statistics.min_immunity_at_peak
+            , configuration_statistics.mean_immunity_at_peak
+            , configuration_statistics.standard_deviation_immunity_at_peak
+            , configuration_statistics.max_immunity_at_end
+            , configuration_statistics.min_immunity_at_end
+            , configuration_statistics.mean_immunity_at_end
+            , configuration_statistics.standard_deviation_immunity_at_end
+            , configuration_statistics.max_immunity_at_complete_replacement
+            , configuration_statistics.min_immunity_at_complete_replacement
+            , configuration_statistics.mean_immunity_at_complete_replacement
+            , configuration_statistics.standard_deviation_immunity_at_complete_replacement
+            , configuration_statistics.max_immunity_at_last90pcnt_max
+            , configuration_statistics.min_immunity_at_last90pcnt_max
+            , configuration_statistics.mean_immunity_at_last90pcnt_max
+            , configuration_statistics.standard_deviation_immunity_at_last90pcnt_max
+            , configuration_statistics.max_immunity_at_last75pcnt_max
+            , configuration_statistics.min_immunity_at_last75pcnt_max
+            , configuration_statistics.mean_immunity_at_last75pcnt_max
+            , configuration_statistics.standard_deviation_immunity_at_last75pcnt_max
+            );
+        if (mysql_query(connection, query))
+        {
+            throw mysql_error(connection);
+        }
+    }
 
 }
 #endif // USE mysql

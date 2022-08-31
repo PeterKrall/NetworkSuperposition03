@@ -158,13 +158,16 @@ namespace persistence
             throw mysql_error(connection);
         }
     }
-    bool MySQLdbWriter::is_activated = activate_conditionally();
+    static bool is_activated = MySQLdbWriter::activate_conditionally();
 
     bool MySQLdbWriter::activate_conditionally()
     {
 #ifndef USE_FILE_OUTPUT
-        Writer::open_writer = &MySQLdbWriter::create;
-        Writer::close_writer = &MySQLdbWriter::destroy;
+        if (Writer::open_writer == nullptr)
+        {
+            Writer::open_writer = &MySQLdbWriter::create;
+            Writer::close_writer = &MySQLdbWriter::destroy;
+        }
         return true;
 #else
         return false;

@@ -129,13 +129,17 @@ namespace persistence
         );
         out << buffer;
     }
-    bool FileWriter::is_activated = activate_conditionally();
+    static bool is_activated = FileWriter::activate_conditionally();
     
     bool FileWriter::activate_conditionally()
     {
 #ifdef USE_PURE_FILE_OUTPUT
-        Writer::open_writer = &FileWriter::create;
-        Writer::close_writer = &FileWriter::destroy;
+        if (Writer::open_writer == nullptr)
+        {
+
+            Writer::open_writer = &FileWriter::create;
+            Writer::close_writer = &FileWriter::destroy;
+        }
         return true;
 #else
         return false;

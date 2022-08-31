@@ -59,6 +59,7 @@ CAnalysis4NetworkSuperpositionDlg::CAnalysis4NetworkSuperpositionDlg(CWnd* pPare
 void CAnalysis4NetworkSuperpositionDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_ED_OUTPUT_DIRECTORY, output_directory);
 }
 
 BEGIN_MESSAGE_MAP(CAnalysis4NetworkSuperpositionDlg, CDialogEx)
@@ -101,7 +102,7 @@ BOOL CAnalysis4NetworkSuperpositionDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-
+	output_directory.SetWindowTextW(L"c:/temp/");
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -160,7 +161,11 @@ void CAnalysis4NetworkSuperpositionDlg::OnBnClickedOk()
 {
 	try
 	{
-		analysis::AnalysisEngine::start_analysis();
+		CStringW t;
+		output_directory.GetWindowTextW(t);
+		std::wstring ws(t.GetBuffer());
+		std::string s(ws.begin(), ws.end());
+		analysis::AnalysisEngine::start_analysis(s.c_str());
 	}
 	catch (std::exception& e)
 	{

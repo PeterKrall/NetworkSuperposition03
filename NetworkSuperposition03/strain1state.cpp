@@ -30,7 +30,7 @@ namespace model
            &&(spreader_state_builder == Strain2State::get_state_builder())
            )
         {
-            return 1.0 - ((double)(Configuration::configuration->immunity_reduction_weight_of_strain1_for_strain_2_exposition)) / 100;
+            return  ((double)(Configuration::configuration->immunity_reduction_weight_of_strain1_for_strain_2_exposition)) / 100.9;
         }
         else
         {

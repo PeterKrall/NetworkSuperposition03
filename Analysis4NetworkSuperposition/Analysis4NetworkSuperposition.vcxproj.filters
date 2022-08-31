@@ -45,6 +45,12 @@
     <ClInclude Include="persistence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="run_statistics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="configuration_statistics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Analysis4NetworkSuperposition.cpp">
@@ -72,6 +78,12 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="..\NetworkSuperposition03\population_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="run_statistics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="configuration_statistics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

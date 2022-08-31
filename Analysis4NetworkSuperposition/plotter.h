@@ -1,19 +1,18 @@
 #ifndef PLOTTER_H
 #define PLOTTER_H
+#include "run_statistics.h"
 #include "MatlabEngine.hpp"
-#include "MatlabDataArray.hpp"
-#include <vector>
+#include "population_state.h"
 namespace analysis
-{
-	using namespace matlab::engine;
+{	
 	class Plotter
 	{
 	public:
-		Plotter();
-		void plot();
-		void test();
+		Plotter(std::unique_ptr<matlab::engine::MATLABEngine>* engine, const char* output_directory);
+		bool generate_matlab_data(std::vector<model::PopulationState*>* population_states, const char* label, const char* model_run_key);
 	private:
-		std::vector<double> sampled_time(int samples, double ts, double start = 0); // for test
+		std::string output_directory;
+		const std::unique_ptr<matlab::engine::MATLABEngine>* engine;
 	};
 }
 #endif

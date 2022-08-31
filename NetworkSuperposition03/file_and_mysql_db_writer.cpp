@@ -25,13 +25,20 @@ namespace persistence
         FileWriter::persist_population_state(population_state);
         MySQLdbWriter::persist_population_state(population_state);
     }
-    bool FileAndMySQLdbWriter::is_activated = activate_conditionally();
+    static bool is_activated = FileAndMySQLdbWriter::activate_conditionally();
 
     bool FileAndMySQLdbWriter::activate_conditionally()
     {
-        Writer::open_writer = &FileAndMySQLdbWriter::create;
-        Writer::close_writer = &FileAndMySQLdbWriter::destroy;
-        return true;
+        if (Writer::open_writer == nullptr)
+        {
+            Writer::open_writer = &FileAndMySQLdbWriter::create;
+            Writer::close_writer = &FileAndMySQLdbWriter::destroy;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
 #endif
