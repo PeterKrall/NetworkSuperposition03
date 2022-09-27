@@ -3,12 +3,13 @@
 #include "database_parameter.inc"
 #include <mysql.h>
 #include "configuration.h"
-
+#include <iostream>
 namespace persistence
 {
     using namespace model;
     MySQLdbWriter::MySQLdbWriter(char* model_run_key) : Writer(model_run_key)
     {
+        std::cout << "started\n";
         connection = mysql_init(NULL);
         // Establish a MySQL connection
         if (
@@ -45,6 +46,7 @@ namespace persistence
                     " ,aggregated_net_with_fluctuation_number "
                     " ,aggregated_net_with_fluctuation_size "
                     " ,aggregated_stable_net_size "
+                    " ,aggregated_stable_net_number "
                     " ,basic_net_with_fluctuation_fluctuation "
                     " ,basic_net_with_fluctuation_number "
                     " ,basic_net_with_fluctuation_size "
@@ -62,22 +64,25 @@ namespace persistence
                     " ,initial_strain1cases "
                     " ,initial_strain2cases "
                     " ,first_strain2_appearance "
+                    " ,environmental_constraints_change_time "
+                    " ,environmental_constraints_change_weight"
                     ") values ( "
-                    " '%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d "
+                    " '%s','%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s','%s',%d, %d, %d "
                     ") "
                     , model_run_key
                     , model::Configuration::configuration->label.c_str()
-                    , model::Configuration::configuration->strain_1_transmission_probability_in_aggregated_net_with_fluctuation
-                    , model::Configuration::configuration->strain_1_transmission_probability_in_aggregated_stable_net
-                    , model::Configuration::configuration->strain_1_transmission_probability_in_basic_net_with_fluctuation
-                    , model::Configuration::configuration->strain_1_transmission_probability_in_basic_stable_net
-                    , model::Configuration::configuration->strain_2_transmission_probability_in_aggregated_net_with_fluctuation
-                    , model::Configuration::configuration->strain_2_transmission_probability_in_aggregated_stable_net
-                    , model::Configuration::configuration->strain_2_transmission_probability_in_basic_net_with_fluctuation
-                    , model::Configuration::configuration->strain_2_transmission_probability_in_basic_stable_net
+                    , model::Configuration::configuration->strain_1_exposition_in_aggregated_net_with_fluctuation
+                    , model::Configuration::configuration->strain_1_exposition_in_aggregated_stable_net
+                    , model::Configuration::configuration->strain_1_exposition_in_basic_net_with_fluctuation
+                    , model::Configuration::configuration->strain_1_exposition_in_basic_stable_net
+                    , model::Configuration::configuration->strain_2_exposition_in_aggregated_net_with_fluctuation
+                    , model::Configuration::configuration->strain_2_exposition_in_aggregated_stable_net
+                    , model::Configuration::configuration->strain_2_exposition_in_basic_net_with_fluctuation
+                    , model::Configuration::configuration->strain_2_exposition_in_basic_stable_net
                     , model::Configuration::configuration->aggregated_net_with_fluctuation_number
                     , model::Configuration::configuration->aggregated_net_with_fluctuation_size
                     , model::Configuration::configuration->aggregated_stable_net_size
+                    , model::Configuration::configuration->aggregated_stable_net_number
                     , model::Configuration::configuration->basic_net_with_fluctuation_fluctuation
                     , model::Configuration::configuration->basic_net_with_fluctuation_number
                     , model::Configuration::configuration->basic_net_with_fluctuation_size
@@ -95,6 +100,8 @@ namespace persistence
                     , model::Configuration::configuration->initial_strain1cases.c_str()
                     , model::Configuration::configuration->initial_strain2cases.c_str()
                     , model::Configuration::configuration->first_strain2_appearance
+                    , model::Configuration::configuration->environmental_constraints_change_time
+                    , model::Configuration::configuration->environmental_constraints_change_weight
         );
         if (mysql_query(connection, query))
         {
@@ -121,6 +128,7 @@ namespace persistence
     void MySQLdbWriter::persist_population_state(PopulationState* population_state)
     {
         char query[4096];
+        std::fill_n(query, 4095, '\0');
         sprintf_s   (
             query
                     , "insert into population_state "
@@ -153,9 +161,32 @@ namespace persistence
                     , population_state->nets_with_fluctuation_and_strain1_activity
                     , population_state->nets_with_fluctuation_and_strain2_activity
                     );
-        if (mysql_query(connection, query))
+        int x = 0;
+        if (( x = mysql_query(connection, query)) != 0)
         {
-            throw mysql_error(connection);
+            std::cout << "error " << x << " try to reconnect\n";
+            if (
+                !mysql_real_connect(
+                      connection
+                    , DB_HOST
+                    , DB_USER
+                    , DB_PWD
+                    , DATABASE_NAME
+                    , PORT
+                    , socket
+                    , 0 // option
+                )
+                || mysql_autocommit(connection, true)
+                )
+            {
+                std::cout << "error trying to reconnect\n";
+                throw mysql_error(connection);
+            }
+            if ((x = mysql_query(connection, query)) != 0)
+            {
+                std::cout << "error " << x << "after trying to reconnect\n";
+                throw mysql_error(connection);
+            }
         }
     }
     static bool is_activated = MySQLdbWriter::activate_conditionally();

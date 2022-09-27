@@ -20,10 +20,10 @@ namespace model
     unsigned int BasicStableNet::class_id;
     double BasicStableNet::get_strain1_transmission_probability()
     {
-        return ((double)(Configuration::configuration->strain_1_transmission_probability_in_basic_stable_net))/10000.0;
+        return ((double)(Configuration::configuration->strain_1_exposition_in_basic_stable_net))/10000.0;
     }
     double BasicStableNet::get_strain2_transmission_probability()
     {
-        return ((double)(Configuration::configuration->strain_2_transmission_probability_in_basic_stable_net))/10000.0;
+        return ((double)(Configuration::configuration->strain_2_exposition_in_basic_stable_net))/10000.0;
     }
 } // namespace model

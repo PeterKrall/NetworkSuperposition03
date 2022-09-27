@@ -17,8 +17,8 @@ namespace model
         virtual double get_strain2_transmission_probability();
         static void* class_identifier;
         virtual void update_transmission_probabilities();
-        virtual bool has_strain1_actvity();
-        virtual bool has_strain2_actvity();
+        virtual unsigned int strain1_actvity();
+        virtual unsigned int strain2_actvity();
     private:
         AggregatedStableNet** aggregated_stable_nets;
         Individual* get_next_member();

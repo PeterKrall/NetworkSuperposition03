@@ -18,14 +18,20 @@ namespace model
         virtual double get_strain2_transmission_probability_complement() const final;
         virtual Individual** get_members() const final;
         virtual unsigned int get_size() const final;
-        virtual bool count_activity(unsigned int* new_activity,unsigned int* strain1_activity,unsigned int* strain2_activity, unsigned int* individuals_in_initial_state) const final;
+        virtual bool count_activity(unsigned int* new_activity,unsigned int* strain1_activity,unsigned int* strain2_activity, unsigned int* individuals_in_initial_state) const final;        
+        double get_strain1_exposition4initial_state();
+        double get_strain2_exposition4initial_state();
     protected:        
         Individual** members;
         unsigned int size = 0;
         unsigned int initialize_activity(std::string& initial_cases_string, _state_builder state_builder);
+        virtual double get_strain1_exposure();
+        virtual double get_strain2_exposure();
     private:
         double strain1_transmission_probability_complement = 1.0;
         double strain2_transmission_probability_complement = 1.0;
+        double strain1_spreader = 0.0;
+        double strain2_spreader = 0.0;
     };
 
 } // namespace model

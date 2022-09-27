@@ -2,6 +2,7 @@
 #include <malloc.h>
 #include "strain1state.h"
 #include "strain2state.h"
+#include <iostream>
 
 namespace model
 {
@@ -9,31 +10,81 @@ namespace model
 
     Population::Population()
     {
-
+        unsigned int shuffled_population_size = Configuration::configuration->aggregated_stable_net_number * Configuration::configuration->aggregated_stable_net_size;
+        
         members = (Individual**)(malloc(sizeof(Individual*) * Configuration::configuration->population_size));
         shuffled_members = (Individual**)(malloc(sizeof(Individual*) * Configuration::configuration->population_size));
         for (unsigned int i = 0; i < Configuration::configuration->population_size; ++i)
         {
             Individual* member = new Individual(i);
             *(members + i) = member;
-            *(shuffled_members + i) = member;
+            *(shuffled_members + i) = nullptr; 
         }
         // build a shuffled copy of the population
-#define POPULATION_SEGMENT_SIZE 2000
-#define NUMBER_OF_SWAPS (Configuration::configuration->population_size / 100) * Configuration::configuration->aggregated_stable_net_shuffle
-        unsigned int segment_count = Configuration::configuration->population_size / POPULATION_SEGMENT_SIZE;
-        for (unsigned int i = 0; i < NUMBER_OF_SWAPS; ++i)
+#define POPULATION_SEGMENT_SIZE 20000
+        if (Configuration::configuration->aggregated_stable_net_shuffle == 100)
         {
-            unsigned int idx0 = ((rand() % segment_count) * POPULATION_SEGMENT_SIZE) + rand() % POPULATION_SEGMENT_SIZE;
-            unsigned int idx1 = ((rand() % segment_count) * POPULATION_SEGMENT_SIZE) + rand() % POPULATION_SEGMENT_SIZE;
-            if (idx0 < Configuration::configuration->population_size && idx1 < Configuration::configuration->population_size)
+            std::cout << "suffled population size = " << shuffled_population_size << "\n";
+            std::vector<Individual*> v;
+            for (unsigned int i = 0; i < shuffled_population_size; ++i)
             {
-                Individual* someone = *(shuffled_members + idx0);
-                *(shuffled_members + idx0) = *(shuffled_members + idx1);
-                *(shuffled_members + idx1) = someone;
-            }        
+                v.push_back(*(members + i));
+            }
+            unsigned int i = 0;
+            while ( i < shuffled_population_size )
+            {
+                unsigned int segment_count = v.size() / POPULATION_SEGMENT_SIZE + 1;
+                unsigned int idx = ((rand() % segment_count) * POPULATION_SEGMENT_SIZE) + rand() % POPULATION_SEGMENT_SIZE;
+                if (idx < v.size())
+                {
+                    if (i % 10000 == 0) { std::cout << "i= " << i << "\n"; }
+                    *(shuffled_members + i) = v.at(idx);
+                    v.erase(v.begin() + idx);
+                    i++;
+                }
+            }
+            // just to make sure that I made no program error 
+            if (v.size())
+            {
+                throw "this never happened";
+            }
+            for (unsigned int i = 0; i < shuffled_population_size; ++i)
+            {
+                if (*(shuffled_members + i) == nullptr)
+                {
+                    throw "this never happened";
+                }
+                for (unsigned int ii = i+1; ii < shuffled_population_size; ++ii)
+                {
+                    if (*(shuffled_members + i) == *(shuffled_members + ii))
+                    {
+                        throw "this never happened";
+                    }
+                }
+            }
         }
+        else
+        {
+            for (unsigned int i = 0; i < Configuration::configuration->population_size; ++i)
+            {
+                *(shuffled_members + i) = *(members + i);
+            }
+#define NUMBER_OF_SWAPS (Configuration::configuration->population_size / 100) * Configuration::configuration->aggregated_stable_net_shuffle
+            unsigned int segment_count = Configuration::configuration->population_size / POPULATION_SEGMENT_SIZE + 1;
+            for (unsigned int i = 0; i < NUMBER_OF_SWAPS; )
+            {
+                unsigned int idx0 = ((rand() % segment_count) * POPULATION_SEGMENT_SIZE) + rand() % POPULATION_SEGMENT_SIZE;
+                unsigned int idx1 = ((rand() % segment_count) * POPULATION_SEGMENT_SIZE) + rand() % POPULATION_SEGMENT_SIZE;
+                if (idx0 < Configuration::configuration->population_size && idx1 < Configuration::configuration->population_size)
+                {
+                    Individual* someone = *(shuffled_members + idx0);
+                    *(shuffled_members + idx0) = *(shuffled_members + idx1);
+                    *(shuffled_members + idx1) = someone; 
+                    i++;
+                }
+            } 
 #undef NUMBER_OF_SWAPS
+        }
 #undef POPULATION_SEGMENT_SIZE
         instance = this;
     }
@@ -52,8 +103,8 @@ namespace model
         // select an random individual in a population possibly bigger than RAND_MAX 
         // but at most POPULATION_SEGMENT_SIZE * RAND_MAX =>
         // (if population size is not a multiple of POPULATION_SEGMENT_SIZE, there will be a bias - but this does not matter)
-#define POPULATION_SEGMENT_SIZE 2000
-        unsigned int segment_count = Configuration::configuration->population_size / POPULATION_SEGMENT_SIZE;
+#define POPULATION_SEGMENT_SIZE 20009
+        unsigned int segment_count = Configuration::configuration->population_size / POPULATION_SEGMENT_SIZE + 1;
         unsigned int segment_offset = (rand() % segment_count) * POPULATION_SEGMENT_SIZE;
         unsigned int idx = segment_offset + rand() % POPULATION_SEGMENT_SIZE;
         if (idx < Configuration::configuration->population_size)

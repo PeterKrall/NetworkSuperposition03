@@ -10,8 +10,8 @@ namespace model
     }
     void Net::update_transmission_probabilities()
     {
-        double strain1_spreader = 0.0;
-        double strain2_spreader = 0.0;
+        strain1_spreader = 0.0;
+        strain2_spreader = 0.0;
         for (unsigned int i = 0; i < size; i++)
         {
             Individual* member = *(members+i);
@@ -24,7 +24,7 @@ namespace model
         }
         else
         {
-            strain1_transmission_probability_complement = pow((1.0-get_strain1_transmission_probability()),strain1_spreader);
+            strain1_transmission_probability_complement = pow((1.0 - get_strain1_exposure()),strain1_spreader);
         }
         if (strain2_spreader == 0.0)
         {
@@ -32,9 +32,26 @@ namespace model
         }
         else
         {
-            strain2_transmission_probability_complement = pow((1.0-get_strain2_transmission_probability()),strain2_spreader);
+            strain2_transmission_probability_complement = pow((1.0 - get_strain2_exposure()),strain2_spreader);
         }
     }
+    double Net::get_strain1_exposure() 
+    {
+        double f = (Configuration::configuration->environmental_constraints_change_time < Configuration::configuration->generation) && (Configuration::configuration->environmental_constraints_change_time != 0)
+                ? (double)(Configuration::configuration->environmental_constraints_change_weight) / 100.0
+                : 1.0
+                ;
+        return get_strain1_transmission_probability()*f;
+    }
+    double Net::get_strain2_exposure() 
+    {
+        double f = (Configuration::configuration->environmental_constraints_change_time < Configuration::configuration->generation) && (Configuration::configuration->environmental_constraints_change_time != 0)
+                ? (double)(Configuration::configuration->environmental_constraints_change_weight) / 100.0
+                : 1.0
+                ;
+        return get_strain2_transmission_probability() * f;
+    }
+
     double Net::get_strain1_transmission_probability_complement() const
     {
         return strain1_transmission_probability_complement;
@@ -92,4 +109,7 @@ namespace model
         }
         return cnt;
     }
+    double Net::get_strain1_exposition4initial_state() { return strain1_spreader * get_strain1_exposure(); }
+    double Net::get_strain2_exposition4initial_state() { return strain2_spreader * get_strain2_exposure(); }
+
 } // namespace model

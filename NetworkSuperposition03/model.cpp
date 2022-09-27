@@ -1,4 +1,5 @@
 #include "model.h"
+#include "plotter.h"
 #include <cstdio>
 #include <malloc.h>
 #include <cassert>
@@ -6,7 +7,27 @@
 
 namespace model
 {
-    
+    using namespace matlab::engine;
+
+    static bool matlab_initialized = false;
+    std::unique_ptr<MATLABEngine> matlab_engine = nullptr;
+    matlab::data::ArrayFactory* matlab_data_factory = nullptr;
+
+    bool initialize_matlab_access()
+    {
+        if (matlab_initialized) { return true;  }
+        // Start MATLAB engine synchronously
+        matlab_engine = startMATLAB();
+        matlab_data_factory = new matlab::data::ArrayFactory();
+        
+        // test: pass vector containing 2 scalar args in vector    
+        std::vector<matlab::data::Array> args({ matlab_data_factory->createScalar<int16_t>(30), matlab_data_factory->createScalar<int16_t>(56) });
+
+        // Call MATLAB function and check result
+        matlab::data::TypedArray<int16_t> result = matlab_engine->feval(u"gcd", args);
+        int16_t v = result[0];        
+        return (matlab_initialized = (v == 2));
+    }
     unsigned int Model::run()
     {
         unsigned int length_of_activity = 0;
@@ -100,6 +121,10 @@ namespace model
     }
     unsigned int model_run()
     {
+        if (!initialize_matlab_access())
+        {
+            throw "matlab not accessible!";
+        }
         srand(time(NULL));
         Model* model= new Model();
         unsigned int length_of_activity = model->run();
@@ -121,6 +146,8 @@ namespace model
 
         Configuration::configuration->generation = 0;
         writer = (Writer::get_open_writer())(model_run_key);
+        plotter = new Plotter(); 
+        //plotter->test();
         new Population();
         {
             unsigned int number_of_stable_nets = Configuration::configuration->population_size / Configuration::configuration->basic_stable_net_size;
@@ -204,7 +231,10 @@ namespace model
         }
         //
         delete Population::instance;
+        delete plotter;
         Writer::get_close_writer()(writer);
     }
     model_execution Model::run_model = &model_run;
+    matlab::data::ArrayFactory* Model::get_matlab_data_factory() { return matlab_data_factory;  };
+    std::unique_ptr<MATLABEngine>* Model::get_matlab_engine() { return &matlab_engine; }
 } // namespace model

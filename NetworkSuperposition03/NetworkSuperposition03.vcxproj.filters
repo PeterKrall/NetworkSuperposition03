@@ -84,6 +84,9 @@
     <ClInclude Include="mysql_db_writer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\c19\NetworkSuperposition03\NetworkSuperposition03\plotter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NetworkSuperposition03.cpp">
@@ -146,6 +149,9 @@
     <ClCompile Include="file_and_mysql_db_writer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\c19\NetworkSuperposition03\NetworkSuperposition03\plotter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NetworkSuperposition03.rc">
@@ -160,6 +166,9 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="About.odt">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\create_tables.sql">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

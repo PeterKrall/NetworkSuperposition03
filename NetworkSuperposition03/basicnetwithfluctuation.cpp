@@ -18,23 +18,25 @@ namespace model
             actual_size++;
         }
     }
-    bool BasicNetWithFluctuation:: BasicNetWithFluctuation::has_strain1_actvity()
+    unsigned int BasicNetWithFluctuation:: BasicNetWithFluctuation::strain1_actvity()
     {
+        unsigned int cnt = 0;
         for (unsigned int i = 0; i < size; i++)
         {
             Individual* member = *(members+i);
-            if (member->get_spreader_state_builder() == Strain1State::get_state_builder()) { return true; }
+            if (member->get_spreader_state_builder() == Strain1State::get_state_builder()) { cnt++; }
         }
-        return false;
+        return cnt;
     }
-    bool BasicNetWithFluctuation::has_strain2_actvity()
+    unsigned int BasicNetWithFluctuation::strain2_actvity()
     {
+        unsigned int cnt = 0;
         for (unsigned int i = 0; i < size; i++)
         {
             Individual* member = *(members+i);
-            if (member->get_spreader_state_builder() == Strain2State::get_state_builder()) { return true; }
+            if (member->get_spreader_state_builder() == Strain2State::get_state_builder()) { cnt++; }
         }
-        return false;
+        return cnt;
     }
 
     void* BasicNetWithFluctuation::get_class_id() { return &class_id; }
@@ -42,11 +44,11 @@ namespace model
     unsigned int BasicNetWithFluctuation::class_id;
     double BasicNetWithFluctuation::get_strain1_transmission_probability()
     {
-        return ((double)(Configuration::configuration->strain_1_transmission_probability_in_basic_net_with_fluctuation))/10000.0;
+        return ((double)(Configuration::configuration->strain_1_exposition_in_basic_net_with_fluctuation))/10000.0;
     }
     double BasicNetWithFluctuation::get_strain2_transmission_probability()
     {
-        return ((double)(Configuration::configuration->strain_2_transmission_probability_in_basic_net_with_fluctuation))/10000.0;
+        return ((double)(Configuration::configuration->strain_2_exposition_in_basic_net_with_fluctuation))/10000.0;
     }
     void BasicNetWithFluctuation::update_transmission_probabilities()
     {

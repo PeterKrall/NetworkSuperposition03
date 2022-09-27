@@ -41,6 +41,13 @@ CNetworkSuperposition03App theApp;
 
 BOOL CNetworkSuperposition03App::InitInstance()
 {
+	AllocConsole();
+	FILE* fpstdin = stdin, * fpstdout = stdout, * fpstderr = stderr;
+
+	freopen_s(&fpstdin, "CONIN$", "r", stdin);
+	freopen_s(&fpstdout, "CONOUT$", "w", stdout);
+	freopen_s(&fpstderr, "CONOUT$", "w", stderr);
+	
 	// initialize the configuration
 	model::Configuration::configuration = new model::Configuration();
 	// InitCommonControlsEx() is required on Windows XP if an application

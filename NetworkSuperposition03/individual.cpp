@@ -5,6 +5,7 @@
 #include "net.h"
 #include <algorithm>
 #include <stdlib.h>
+#include <iostream>
 namespace model
 {
     Individual::Individual(unsigned int index) : index(index)
@@ -46,10 +47,15 @@ namespace model
         {
             double raw_strain1transmission_probability_complement = 1.0;
             double raw_strain2transmission_probability_complement = 1.0;
+            double strain1_exposition = 0.0;
+            double strain2_exposition = 0.0;
+
             for(std::vector<Net*>::iterator it = std::begin(*including_nets); it != std::end(*including_nets); ++it)
             {
                 raw_strain1transmission_probability_complement = raw_strain1transmission_probability_complement * (*it)->get_strain1_transmission_probability_complement();
                 raw_strain2transmission_probability_complement = raw_strain2transmission_probability_complement * (*it)->get_strain2_transmission_probability_complement();
+                strain1_exposition += (*it)->get_strain1_exposition4initial_state();
+                strain2_exposition += (*it)->get_strain2_exposition4initial_state();
             }
             double raw_transmission_probability_complement = raw_strain1transmission_probability_complement * raw_strain2transmission_probability_complement;
             if ( raw_transmission_probability_complement < 1.0)
@@ -66,18 +72,42 @@ namespace model
                 unsigned int t = (corrected_transmission_probability_complement * RAND_MAX);
                 if (r > t)
                 {
-
-                    double conditional_strain1_transmission_probability
-                            = (corrected_strain1transmission_probability)/(corrected_strain1transmission_probability+corrected_strain2transmission_probability);
-                    r = rand();
-                    t = (conditional_strain1_transmission_probability  * RAND_MAX);
-                    if (r < t || corrected_strain2transmission_probability == 0.0)
+                    // this is a bit tinkering ... but needed to avoid effects of rounding problems with very small numbers
+                    if (corrected_strain2transmission_probability != 0.0 && corrected_strain1transmission_probability == 0)
                     {
-                        activate(Strain1State::get_state_builder(),false);
+                        activate(Strain2State::get_state_builder(), false);
+                        return true;
+                    }
+                    if (corrected_strain2transmission_probability == 0.0 && corrected_strain1transmission_probability != 0)
+                    {
+                        activate(Strain1State::get_state_builder(), false);
+                        return true;
+                    }
+                    double conditional_strain1_transmission_probability_rule1
+                            = (strain1_exposition)/(strain1_exposition + strain2_exposition);
+                    double conditional_strain1_transmission_probability_rule2
+                        = corrected_strain1transmission_probability / (corrected_strain1transmission_probability + corrected_strain2transmission_probability);
+                    r = rand();
+                    t = (Configuration::configuration->use_rule2_for_conditional_strain_transmission_probabilities)
+                        ? conditional_strain1_transmission_probability_rule2 * RAND_MAX
+                        : conditional_strain1_transmission_probability_rule1 * RAND_MAX
+                        ;
+                    if (r < t)
+                    {
+                        if (Configuration::configuration->generation > 160 && including_nets->size() > 2)
+                        {
+#ifdef FOLLOW_ON_CONSOLE
+                            std::cout << "new strain 1 case in net with fluctuation - generation: " 
+                                << Configuration::configuration->generation 
+                                << " rule1/rule2 probablity " << conditional_strain1_transmission_probability_rule1 
+                                << " / " << conditional_strain1_transmission_probability_rule2 << "\n";
+#endif
+                        }
+                        activate(Strain1State::get_state_builder(), false);
                     }
                     else
                     {
-                       activate(Strain2State::get_state_builder(),false);
+                        activate(Strain2State::get_state_builder(), false);
                     }
                     return true;
                 }

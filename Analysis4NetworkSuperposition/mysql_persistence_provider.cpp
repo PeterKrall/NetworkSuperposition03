@@ -120,9 +120,10 @@ namespace persistence
                 model::Configuration* comfiguration
                     = new model::Configuration(long_values[0], long_values[1], long_values[2], long_values[3], long_values[4],
                         long_values[5], long_values[6], long_values[7], long_values[8], long_values[9], long_values[10],
-                        long_values[11], long_values[12], long_values[13], long_values[14], long_values[15], long_values[16],
+                        "n.a.", long_values[11], long_values[12], long_values[13], long_values[14], long_values[15], long_values[16],
                         long_values[17], long_values[18], long_values[19], long_values[20], long_values[21], long_values[22],
-                        long_values[23], long_values[24], long_values[25], text_values[1], text_values[2], "n.a.", text_values[0]);
+                        long_values[23], long_values[24], long_values[25], 0, 0,
+                        text_values[1], text_values[2], "n.a.", text_values[0], false);
                 configurations->push_back(comfiguration);
             }
             mysql_stmt_close(stmt);
@@ -176,14 +177,14 @@ namespace persistence
                 , configuration->label.c_str()
                 , configuration->initial_strain1cases.c_str()
                 , configuration->initial_strain2cases.c_str()
-                , configuration->strain_1_transmission_probability_in_aggregated_net_with_fluctuation
-                , configuration->strain_1_transmission_probability_in_aggregated_stable_net
-                , configuration->strain_1_transmission_probability_in_basic_net_with_fluctuation
-                , configuration->strain_1_transmission_probability_in_basic_stable_net
-                , configuration->strain_2_transmission_probability_in_aggregated_net_with_fluctuation
-                , configuration->strain_2_transmission_probability_in_aggregated_stable_net
-                , configuration->strain_2_transmission_probability_in_basic_net_with_fluctuation
-                , configuration->strain_2_transmission_probability_in_basic_stable_net
+                , configuration->strain_1_exposition_in_aggregated_net_with_fluctuation
+                , configuration->strain_1_exposition_in_aggregated_stable_net
+                , configuration->strain_1_exposition_in_basic_net_with_fluctuation
+                , configuration->strain_1_exposition_in_basic_stable_net
+                , configuration->strain_2_exposition_in_aggregated_net_with_fluctuation
+                , configuration->strain_2_exposition_in_aggregated_stable_net
+                , configuration->strain_2_exposition_in_basic_net_with_fluctuation
+                , configuration->strain_2_exposition_in_basic_stable_net
                 , configuration->aggregated_net_with_fluctuation_number
                 , configuration->aggregated_net_with_fluctuation_size
                 , configuration->aggregated_stable_net_size
@@ -476,14 +477,14 @@ namespace persistence
             " ,%f, %f, %f, %f"
             ") "
             , configuration_statistics.label.c_str()
-            , configuration_statistics.strain_1_transmission_probability_in_aggregated_net_with_fluctuation
-            , configuration_statistics.strain_1_transmission_probability_in_aggregated_stable_net
-            , configuration_statistics.strain_1_transmission_probability_in_basic_net_with_fluctuation
-            , configuration_statistics.strain_1_transmission_probability_in_basic_stable_net
-            , configuration_statistics.strain_2_transmission_probability_in_aggregated_net_with_fluctuation
-            , configuration_statistics.strain_2_transmission_probability_in_aggregated_stable_net
-            , configuration_statistics.strain_2_transmission_probability_in_basic_net_with_fluctuation
-            , configuration_statistics.strain_2_transmission_probability_in_basic_stable_net
+            , configuration_statistics.strain_1_exposition_in_aggregated_net_with_fluctuation
+            , configuration_statistics.strain_1_exposition_in_aggregated_stable_net
+            , configuration_statistics.strain_1_exposition_in_basic_net_with_fluctuation
+            , configuration_statistics.strain_1_exposition_in_basic_stable_net
+            , configuration_statistics.strain_2_exposition_in_aggregated_net_with_fluctuation
+            , configuration_statistics.strain_2_exposition_in_aggregated_stable_net
+            , configuration_statistics.strain_2_exposition_in_basic_net_with_fluctuation
+            , configuration_statistics.strain_2_exposition_in_basic_stable_net
             , configuration_statistics.aggregated_net_with_fluctuation_number
             , configuration_statistics.aggregated_net_with_fluctuation_size
             , configuration_statistics.aggregated_stable_net_size

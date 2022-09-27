@@ -65,4 +65,8 @@ public:
 	CButton base_on_shuffled_population;
 	CEdit label;
 	CEdit aggregated_stable_net_shuffle;
+	CEdit environmental_constraint_change_time;
+	CEdit environmentaL_constraint_change_weight;
+	CEdit aggregated_stable_net_number;
+	CButton use_rule2_for_conditional_strain_transmission_probabilities;
 };

@@ -3,7 +3,7 @@
 #include "MatlabEngine.hpp"
 #include "MatlabDataArray.hpp"
 #include <vector>
-namespace analysis
+namespace model
 {
 	using namespace matlab::engine;
 	class Plotter

@@ -17,11 +17,11 @@ namespace model
     unsigned int AggregatedNetWithFluctuation::class_id;
     double AggregatedNetWithFluctuation::get_strain1_transmission_probability()
     {
-        return ((double)(Configuration::configuration->strain_1_transmission_probability_in_aggregated_net_with_fluctuation))/10000.0;
+        return ((double)(Configuration::configuration->strain_1_exposition_in_aggregated_net_with_fluctuation))/10000.0;
     }
     double AggregatedNetWithFluctuation::get_strain2_transmission_probability()
     {
-        return ((double)(Configuration::configuration->strain_2_transmission_probability_in_aggregated_net_with_fluctuation))/10000.0;
+        return ((double)(Configuration::configuration->strain_2_exposition_in_aggregated_net_with_fluctuation))/10000.0;
     }
     void AggregatedNetWithFluctuation::update_transmission_probabilities()
     {

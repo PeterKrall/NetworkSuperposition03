@@ -14,6 +14,8 @@ namespace model
         virtual double get_strain1_transmission_probability();
         virtual double get_strain2_transmission_probability();
         static void* class_identifier;
+        virtual double get_strain1_exposure();
+        virtual double get_strain2_exposure();
     };
 } // namespace model
 

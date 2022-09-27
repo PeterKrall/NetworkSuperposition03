@@ -1,5 +1,5 @@
 #include "plotter.h"
-#include "analysis_engine"
+#include "model.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <numeric>
-namespace analysis
+namespace model
 {
 	Plotter::Plotter()
 	{
@@ -70,7 +70,7 @@ namespace analysis
                 });
 
             // Invoke the plot command
-            (*AnalysisEngine::get_matlab_engine())->feval(u"plot", args);
+            (*Model::get_matlab_engine())->feval(u"plot", args);
         }
     };
 

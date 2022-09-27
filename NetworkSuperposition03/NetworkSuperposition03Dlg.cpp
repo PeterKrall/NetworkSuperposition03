@@ -117,13 +117,17 @@ void CNetworkSuperposition03Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, ED_RANDOM_TRANSMISSION_PROBABILITY_STRAIN_4, random_transmission_probability_strain2);
 	DDX_Control(pDX, IDC_EDIT1, label);
 	DDX_Control(pDX, ED_AGGREGATED_STABLE_NET_SHUFFLE, aggregated_stable_net_shuffle);
+	DDX_Control(pDX, ED_ENVIRONMENTALCONSTRAINT_CHANGE_TIME, environmental_constraint_change_time);
+	DDX_Control(pDX, ED_ENVIRONMENTAL_CONSTRAINT_CHANGE_WEIGHT, environmentaL_constraint_change_weight);
+	DDX_Control(pDX, ED_AGGREGATED_STABLE_NET_NUMBER, aggregated_stable_net_number);
+	DDX_Control(pDX, IDC_CHECK1, use_rule2_for_conditional_strain_transmission_probabilities);
 }
 
 BEGIN_MESSAGE_MAP(CNetworkSuperposition03Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDOK, &CNetworkSuperposition03Dlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDOK, &CNetworkSuperposition03Dlg::OnBnClickedOk)	
 END_MESSAGE_MAP()
 
 
@@ -158,17 +162,18 @@ BOOL CNetworkSuperposition03Dlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
-	aggregated_net_with_fluctuation_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_transmission_probability_in_aggregated_net_with_fluctuation));
-	aggregated_stable_net_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_transmission_probability_in_aggregated_stable_net));
-	basic_net_with_fluctuation_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_transmission_probability_in_basic_net_with_fluctuation));
-	basic_stable_net_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_transmission_probability_in_basic_stable_net));
-	aggregated_net_with_fluctuation_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_transmission_probability_in_aggregated_net_with_fluctuation));
-	aggregated_stable_net_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_transmission_probability_in_aggregated_stable_net));
-	basic_net_with_fluctuation_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_transmission_probability_in_basic_net_with_fluctuation));
-	basic_stable_net_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_transmission_probability_in_basic_stable_net));
+	aggregated_net_with_fluctuation_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_exposition_in_aggregated_net_with_fluctuation));
+	aggregated_stable_net_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_exposition_in_aggregated_stable_net));
+	basic_net_with_fluctuation_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_exposition_in_basic_net_with_fluctuation));
+	basic_stable_net_transmission_probability_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_1_exposition_in_basic_stable_net));
+	aggregated_net_with_fluctuation_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_exposition_in_aggregated_net_with_fluctuation));
+	aggregated_stable_net_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_exposition_in_aggregated_stable_net));
+	basic_net_with_fluctuation_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_exposition_in_basic_net_with_fluctuation));
+	basic_stable_net_transmission_probability_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->strain_2_exposition_in_basic_stable_net));
 	aggregated_net_with_fluctuation_number.SetWindowTextW(to_wstring(model::Configuration::configuration->aggregated_net_with_fluctuation_number));
 	aggregated_net_with_fluctuation_size.SetWindowTextW(to_wstring(model::Configuration::configuration->aggregated_net_with_fluctuation_size));
 	aggregated_stable_net_size.SetWindowTextW(to_wstring(model::Configuration::configuration->aggregated_stable_net_size));
+	aggregated_stable_net_number.SetWindowTextW(L"auto");
 	basic_net_with_fluctuation_fluctuation.SetWindowTextW(to_wstring(model::Configuration::configuration->basic_net_with_fluctuation_fluctuation));
 	basic_net_with_fluctuation_number.SetWindowTextW(to_wstring(model::Configuration::configuration->basic_net_with_fluctuation_number));
 	basic_net_with_fluctuation_size.SetWindowTextW(to_wstring(model::Configuration::configuration->basic_net_with_fluctuation_size));
@@ -188,12 +193,13 @@ BOOL CNetworkSuperposition03Dlg::OnInitDialog()
 	initial_cases_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration->initial_strain2cases));
 	appearance_of_strain_2.SetWindowTextW(to_wstring(model::Configuration::configuration-> first_strain2_appearance));
 	output_filename_prefix.SetWindowTextW(to_wstring(model::Configuration::configuration->output_directory));
-	
-
-
+	environmental_constraint_change_time.SetWindowTextW(to_wstring(model::Configuration::configuration->environmental_constraints_change_time));
+	environmentaL_constraint_change_weight.SetWindowTextW(to_wstring(model::Configuration::configuration->environmental_constraints_change_weight));
 	basic_stable_net_size.SetWindowTextW(to_wstring(model::Configuration::configuration->basic_stable_net_size));
 	initial_cases_strain_1.SetWindowTextW(to_wstring(model::Configuration::configuration->initial_strain1cases));
 	number_of_runs.SetWindowTextW(L"10");
+	use_rule2_for_conditional_strain_transmission_probabilities.SetCheck(model::Configuration::configuration->use_rule2_for_conditional_strain_transmission_probabilities);
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -265,6 +271,7 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 		, to_uint(aggregated_net_with_fluctuation_number)
 		, to_uint(aggregated_net_with_fluctuation_size)
 		, to_uint(aggregated_stable_net_size)
+		, to_string(aggregated_stable_net_number).c_str()
 		, to_uint(basic_net_with_fluctuation_fluctuation)
 		, to_uint(basic_net_with_fluctuation_number)
 		, to_uint(basic_net_with_fluctuation_size)
@@ -281,10 +288,13 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 		, to_uint(reduction_of_immunity_time)
 		, to_uint(reduction_of_immunity_degree)
 		, to_uint(appearance_of_strain_2)
+		, to_uint(environmental_constraint_change_time)
+		, to_uint(environmentaL_constraint_change_weight)
 		, to_string(initial_cases_strain_1).c_str()
 		, to_string(initial_cases_strain_2).c_str()
 		, to_string(output_filename_prefix).c_str()
 		, to_string(label).c_str()
+		, (use_rule2_for_conditional_strain_transmission_probabilities.GetCheck() != 0)
 		);
 	}
 	catch (...)
@@ -304,5 +314,6 @@ void CNetworkSuperposition03Dlg::OnBnClickedOk()
 	}
 	CDialogEx::OnOK();
 }
+
 
 

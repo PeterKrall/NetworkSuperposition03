@@ -31,6 +31,7 @@ namespace persistence
             ", aggregated_net_with_fluctuation_number = %d\n"
             ", aggregated_net_with_fluctuation_size = %d\n"
             ", aggregated_stable_net_size = %d\n"
+            ", aggregated_stable_net_number = %d\n"
             ", basic_net_with_fluctuation_fluctuation = %d\n"
             ", basic_net_with_fluctuation_number = %d\n"
             ", basic_net_with_fluctuation_size = %d\n"
@@ -48,18 +49,22 @@ namespace persistence
             ", initial_strain1cases = %s\n"
             ", initial_strain2cases = %s\n"
             ", first_strain2_appearance = %d\n"
+            ", environmental_constraints_change_time = %d\n"
+            ", environmental_constraints_change_weight = %d\n"
+            ", use_rul2 = %s\n"
             "\n"
-            , Configuration::configuration->strain_1_transmission_probability_in_aggregated_net_with_fluctuation
-            , Configuration::configuration->strain_1_transmission_probability_in_aggregated_stable_net
-            , Configuration::configuration->strain_1_transmission_probability_in_basic_net_with_fluctuation
-            , Configuration::configuration->strain_1_transmission_probability_in_basic_stable_net
-            , Configuration::configuration->strain_2_transmission_probability_in_aggregated_net_with_fluctuation
-            , Configuration::configuration->strain_2_transmission_probability_in_aggregated_stable_net
-            , Configuration::configuration->strain_2_transmission_probability_in_basic_net_with_fluctuation
-            , Configuration::configuration->strain_2_transmission_probability_in_basic_stable_net
+            , Configuration::configuration->strain_1_exposition_in_aggregated_net_with_fluctuation
+            , Configuration::configuration->strain_1_exposition_in_aggregated_stable_net
+            , Configuration::configuration->strain_1_exposition_in_basic_net_with_fluctuation
+            , Configuration::configuration->strain_1_exposition_in_basic_stable_net
+            , Configuration::configuration->strain_2_exposition_in_aggregated_net_with_fluctuation
+            , Configuration::configuration->strain_2_exposition_in_aggregated_stable_net
+            , Configuration::configuration->strain_2_exposition_in_basic_net_with_fluctuation
+            , Configuration::configuration->strain_2_exposition_in_basic_stable_net
             , Configuration::configuration->aggregated_net_with_fluctuation_number
             , Configuration::configuration->aggregated_net_with_fluctuation_size
             , Configuration::configuration->aggregated_stable_net_size
+            , Configuration::configuration->aggregated_stable_net_number
             , Configuration::configuration->basic_net_with_fluctuation_fluctuation
             , Configuration::configuration->basic_net_with_fluctuation_number
             , Configuration::configuration->basic_net_with_fluctuation_size
@@ -77,6 +82,9 @@ namespace persistence
             , Configuration::configuration->initial_strain1cases.c_str()
             , Configuration::configuration->initial_strain2cases.c_str()
             , Configuration::configuration->first_strain2_appearance
+            , Configuration::configuration->environmental_constraints_change_time
+            , Configuration::configuration->environmental_constraints_change_weight
+            , (Configuration::configuration->use_rule2_for_conditional_strain_transmission_probabilities?"Y":"N")
         );
         out << buffer;
         out.flush();
